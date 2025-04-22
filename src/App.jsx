@@ -2,18 +2,22 @@ import { useState, useEffect } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
+import TourCard from './components/TourCard';
 
 function App() {
+  // ... Store in state: tours, loading, error
   const [tours, setTours] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // ... Fetch tours from https://course-api.com/react-tours-project using useEffect
   useEffect(() => {
     const fetchTours = async () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch('https://course-api.com/react-tours-project');
+        // ... Use CORS proxy to fetch data
+        const response = await fetch('https://cors-anywhere.herokuapp.com/https://course-api.com/react-tours-project');
         if (!response.ok) {
           throw new Error('Failed to fetch tours');
         }
@@ -28,6 +32,11 @@ function App() {
 
     fetchTours();
   }, []);
+
+  // ... Include a "Not Interested" button that removes this tour when clicked
+  const removeTour = (id) => {
+    setTours((prevTours) => prevTours.filter((tour) => tour.id !== id));
+  };
 
   if (loading) {
     return <h2>Loading...</h2>;
@@ -50,12 +59,17 @@ function App() {
       <h1>Vite + React</h1>
       <div className="card">
         <h2>Tours</h2>
+        {/* ... Create a card component to display a tour's name, info, image, and price */}
         {tours.map((tour) => (
-          <div key={tour.id} className="tour">
-            <h3>{tour.name}</h3>
-            <p>{tour.info}</p>
-            <p>Price: ${tour.price}</p>
-          </div>
+          <TourCard
+            key={tour.id}
+            id={tour.id}
+            name={tour.name}
+            info={tour.info}
+            image={tour.image}
+            price={tour.price}
+            removeTour={removeTour}
+          />
         ))}
       </div>
       <p className="read-the-docs">
