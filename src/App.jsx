@@ -33,24 +33,23 @@ function App() {
     fetchTours();
   }, []);
 
-  // ... Include a "Not Interested" button that removes this tour when clicked
-  const removeTour = (id) => {
-    setTours((prevTours) => prevTours.filter((tour) => tour.id !== id));
-  };
-
+  // If loading is true, display "Loading..."
   if (loading) {
     return <h2>Loading...</h2>;
   }
 
+  // If error, display an error message
   if (error) {
     return <h2>Error: {error}</h2>;
   }
 
+  // Else, render Gallery with tour data
   return (
     <>
+    
       <h1>Tour Gallery</h1>
       {/* ... Create a gallery component that maps over the tours array and renders TourCard for each */}
-      <Gallery tours={tours} removeTour={removeTour} />
+      <Gallery tours={tours} removeTour={(id) => setTours((prev) => prev.filter((tour) => tour.id !== id))} />
     </>
   );
 }
